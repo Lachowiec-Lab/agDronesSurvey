@@ -1,58 +1,20 @@
-
-### Packages ###
-library(ggplot2)
-library(gplots)
-library(ggalluvial)
-library(directlabels)
-library(patchwork)
 library(tidyverse)
 
 ### Read in survey data
-prelim <- read.csv("raw_data/Results_Ag_Drones_2021_Survey.csv")
-head(prelim)
+data1 <- read.csv("raw_data/Results_Ag_Drones_2021_Survey.csv")
 country_code <- read.csv("raw_data/countries_code.csv")
 
-###Section 1####
-####Survey respondents’ demographics and perceived value of UAS in agricultural research#####
-#####Country of respondent#####
-country_data <- as.data.frame(table(prelim$country))
-sum(country_data$Freq) #135 respondents for this question
-names(country_data) <- c("id", "Frequency")
-outs <- merge(country_data, country_code, by = "id")
+data2 <- data1 |> 
+  left_join(country_code, by = c("country"= "id"))
 
-outs |>
-  ggplot(aes(x = Country, y = Frequency)) +
-  geom_bar(stat = "identity", fill = "seagreen") +
-  theme_classic() +
-  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1),
-        axis.text = element_text(size = 12)) +
-  theme(plot.margin = margin(t = 20,  # Top margin
-                             r = 20,  # Right margin
-                             b = 40,  # Bottom margin
-                             l = 40)) # Left margin
-outs[outs$Country == "Brazil", 2]/sum(outs$Frequency) #5.2%
-outs[outs$Country == "Canada", 2]/sum(outs$Frequency) #5.2%
+data3 <- data2 |> 
+  mutate(gender = recode(gender,
+                         `1` = "Male",
+                         `2` = "Female",
+                         `3` = "Non-binary",
+                         `4` = "Prefer not to say"))
 
-#####Gender of respondent#####
-gender_data <- as.data.frame(table(prelim$gender))
-head(gender_data)
-gender_data$Var1 <- c("Male", "Female", "Non-binary", "Prefer not to say")
-names(gender_data) <- c("Gender", "Frequency")
-gender_data
-sum(gender_data$Freq) #137 respondents for this question, one option
 
-gender_data |>
-  ggplot(aes(x = reorder(Gender, Frequency), y = Frequency)) +
-  geom_bar(stat = "identity", fill = "seagreen") +
-  theme_classic() +
-  theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1),
-        axis.text = element_text(size = 12)) +
-  xlab(label = "") +
-  theme(plot.margin = margin(t = 20,  # Top margin
-                             r = 20,  # Right margin
-                             b = 10,  # Bottom margin
-                             l = 30)) # Left margin
-gender_data[gender_data == "Male", 2]/sum(gender_data$Frequency) #69.3%
 
 #####Race of respondent#####
 race_data <- subset(prelim, select=ethaapi:ethrnl)
@@ -131,25 +93,25 @@ nrow(system_data[complete.cases(system_data), ]) # we have 146 responses,
 
 system_totals <- colSums(system_data, na.rm = T)
 system_names <- c("Aquatic plants",
-                   "Bioenergy grasses",
-                   "Cereals",
-                   "Fiber crops",
-                   "Fruits",
-                   "Herbs and spices", 
-                   "Medicinal plants",
-                   "Nuts and seeds", 
-                   "Ornamental plants", 
-                   "Pastures", 
-                   "Plants (general)", 
-                   "Pulses", 
-                   "Rhizomes, tubers, roots, and bulb crops", 
-                   "Soybean and oil crops",
-                   "Sugarcane, sugar beets, and sugar crops", 
-                   "Trees", 
-                   "Vegetables", 
-                   "Weeds",
-                   "Other", 
-                   "Not applicable")
+                  "Bioenergy grasses",
+                  "Cereals",
+                  "Fiber crops",
+                  "Fruits",
+                  "Herbs and spices", 
+                  "Medicinal plants",
+                  "Nuts and seeds", 
+                  "Ornamental plants", 
+                  "Pastures", 
+                  "Plants (general)", 
+                  "Pulses", 
+                  "Rhizomes, tubers, roots, and bulb crops", 
+                  "Soybean and oil crops",
+                  "Sugarcane, sugar beets, and sugar crops", 
+                  "Trees", 
+                  "Vegetables", 
+                  "Weeds",
+                  "Other", 
+                  "Not applicable")
 systems <-data.frame(System = system_names, Frequency = system_totals)
 
 systems |>
@@ -227,29 +189,29 @@ nrow(topic_data[complete.cases(topic_data), ]) # we have 146 responses,
 
 topic_totals <- colSums(topic_data, na.rm = T)
 topic_names <- c("Agronomy",
-                  "Animal behavior",
-                  "Animal nutrition",
-                  "Animal science",
-                  "Animal welfare",
-                  "Breeding", 
-                  "Ecology",
-                  "Evolution", 
-                  "Genetics", 
-                  "Pathology", 
-                  "Physiology",
+                 "Animal behavior",
+                 "Animal nutrition",
+                 "Animal science",
+                 "Animal welfare",
+                 "Breeding", 
+                 "Ecology",
+                 "Evolution", 
+                 "Genetics", 
+                 "Pathology", 
+                 "Physiology",
                  "Plant/animal development",
-                  "Agricultural engineering", 
-                  "Sensors/optics", 
-                  "Software engineering",
-                  "Statistics", 
-                  "Mathematics", 
-                  "Informatics", 
-                  "Computer science",
+                 "Agricultural engineering", 
+                 "Sensors/optics", 
+                 "Software engineering",
+                 "Statistics", 
+                 "Mathematics", 
+                 "Informatics", 
+                 "Computer science",
                  "Soil science",
                  "Environmental science",
                  "Conservation",
                  "Geoscience",
-                  "Other")
+                 "Other")
 topics <-data.frame(Topic = topic_names, Frequency = topic_totals)
 
 topics |>
@@ -438,6 +400,7 @@ barriers |>
                              b = 20,  # Bottom margin
                              l = 70)) # Left margin 
 
+
 #####Comparing barriers: current v. future#####
 ##Current Users
 barrier_data <- subset(currentuse, select=bsatisf:bnobar)
@@ -485,19 +448,20 @@ barrierRanks <- data.frame(barriers = barrier_names, group = groups, ranks = ran
 barrierRanks
 barrierRanks$barriers <- as.factor(barrierRanks$barriers)
 #ordering the ranks based on the current users selections
-barrierRanks$barriers <- factor(barrierRanks$barriers, levels = c("Lack of knowledge or trained \npersonnel to analyze data",
-                                                                  "High cost of instruments,\ndevices,software",
-                                                                  "Lack of validated and\n publicly available protocols",
-                                                                  "Regulatory challenges",
-                                                                  "Lack of knowledge or trained \npersonnel to run instruments",
-                                                                  "Uncertainty about items\nto purchase or pipelines to use",
-                                                                  "Lack of data storage solutions\n or computing power",
-                                                                  "Satisfaction with\n current approaches",
-                                                                  "Lack of in-person training",
-                                                                  "General lack of personnel\n to add more research",
-                                                                  "Gaps in online materials\n for training",
-                                                                  "Disinterest of funding agencies\n in UAV phenotyping",
-                                                                  "No barriers"))
+barrierRanks$barriers <- factor(barrierRanks$barriers, 
+                                levels = c("Lack of knowledge or trained \npersonnel to analyze data",
+                                           "High cost of instruments,\ndevices,software",
+                                           "Lack of validated and\n publicly available protocols",
+                                           "Regulatory challenges",
+                                           "Lack of knowledge or trained \npersonnel to run instruments",
+                                           "Uncertainty about items\nto purchase or pipelines to use",
+                                           "Lack of data storage solutions\n or computing power",
+                                           "Satisfaction with\n current approaches",
+                                           "Lack of in-person training",
+                                           "General lack of personnel\n to add more research",
+                                           "Gaps in online materials\n for training",
+                                           "Disinterest of funding agencies\n in UAV phenotyping",
+                                           "No barriers"))
 ggplot(barrierRanks, aes(x = groups, y = ranks, 
                          group = barriers, col = barriers)) + 
   geom_line() +
