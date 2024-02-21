@@ -1,5 +1,9 @@
 library(tidyverse)
-
+library(ggalluvial)
+library(patchwork)
+library(ggrepel)
+library(directlabels)
+library(gplots)
 ### Read in survey data
 data1 <- read.csv("raw_data/Results_Ag_Drones_2021_Survey.csv")
 country_code <- read.csv("raw_data/countries_code.csv")
