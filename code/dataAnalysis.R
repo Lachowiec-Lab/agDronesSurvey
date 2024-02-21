@@ -708,6 +708,8 @@ uavs |>
                              r = 20,  # Right margin
                              b = 20,  # Bottom margin
                              l = 20)) # Left margin
+uavs[uav_names == "multirotor", 2]/nrow(uav_data[complete.cases(uav_data), ]) #93.1%
+
 ####Sensor type#####
 sensor_data <- subset(prelim, select=usrgb:usother)
 sensor_totals <- colSums(sensor_data, na.rm = T)
@@ -727,6 +729,11 @@ sensors |>
                              r = 20,  # Right margin
                              b = 20,  # Bottom margin
                              l = 20)) # Left margin
+
+sensors[sensors$Sensors == "RGB", 2]/nrow(sensor_data[complete.cases(sensor_data), ]) #88.5%
+sensors[sensors$Sensors == "multispectral", 2]/nrow(sensor_data[complete.cases(sensor_data), ]) #80.3%
+sensors[sensors$Sensors == "thermal", 2]/nrow(sensor_data[complete.cases(sensor_data), ]) #45.9%
+
 ####georef type#####
 georef_data <- subset(prelim, select=uggcp:ugother)
 georef_totals <- colSums(georef_data, na.rm = T)
@@ -744,6 +751,8 @@ georef |>
                              r = 20,  # Right margin
                              b = 20,  # Bottom margin
                              l = 50)) # Left margin
+
+georef[georef$Georeferencing == "GCP", 2]/nrow(georef_data[complete.cases(georef_data), ]) #75%
 
 ####Calibration tools####
 #We are missing the raw data; received these values from the HELPS lab
@@ -827,6 +836,9 @@ plan |>
 plan[plan$FlightAnalysis == "Agisoft Metashape 3D", 2]/nrow(plan_data[complete.cases(plan_data), ]) #34.5%
 plan[plan$FlightAnalysis == "Pix4D", 2]/nrow(plan_data[complete.cases(plan_data), ]) #60.0%
 
+##examine other entries
+table(prelim$piothtxt)
+5/nrow(plan_data[complete.cases(plan_data), ]) #9.1%  5 entries refer to Plot Phenix users
 
 ####Data Storage#####
 plan_data <- subset(prelim, select=dspubcl:dsother)
@@ -840,11 +852,16 @@ plan_names <- c("Public cloud",
                 "Hard drives",
                 "Other"
 )
-plan <-data.frame(FlightPlanning = plan_names, Frequency = plan_totals)
+plan <-data.frame(Storage = plan_names, Frequency = plan_totals)
 table(plan$Frequency)
 
+<<<<<<< HEAD:code/dataAnalysis.R
 plan |>
   ggplot(aes(x = reorder(FlightPlanning, -Frequency), y = Frequency)) +
+=======
+plan %>%
+  ggplot(aes(x = reorder(Storage, -Frequency), y = Frequency)) +
+>>>>>>> main:dataAnalysis.R
   geom_bar(stat = "identity", fill = "steelblue") +
   theme_classic() +
   theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1),
@@ -854,6 +871,9 @@ plan |>
                              r = 20,  # Right margin
                              b = 20,  # Bottom margin
                              l = 50)) # Left margin
+
+plan[plan$Storage == "Institutional server", 2]/nrow(plan_data[complete.cases(plan_data), ]) #58.3%
+plan[plan$Storage == "Hard drives", 2]/nrow(plan_data[complete.cases(plan_data), ]) #45.0%
 
 ####Desire to improve data storage protocol####
 plan_data <- subset(prelim, select=uproto)
