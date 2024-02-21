@@ -8,9 +8,9 @@ library(patchwork)
 library(tidyverse)
 
 ### Read in survey data
-prelim <- read.csv("raw_data/Results_Ag_Drones_2021_Survey.csv")
+prelim <- read.csv("data/Results_Ag_Drones_2021_Survey.csv")
 head(prelim)
-country_code <- read.csv("raw_data/countries_code.csv")
+country_code <- read.csv("data/countries_code.csv")
 
 ###Section 1####
 ####Survey respondents’ demographics and perceived value of UAS in agricultural research#####

@@ -5,8 +5,8 @@ library(ggrepel)
 library(directlabels)
 library(gplots)
 ### Read in survey data
-data1 <- read.csv("raw_data/Results_Ag_Drones_2021_Survey.csv")
-country_code <- read.csv("raw_data/countries_code.csv")
+data1 <- read.csv("data/Results_Ag_Drones_2021_Survey.csv")
+country_code <- read.csv("data/countries_code.csv")
 
 data2 <- data1 |> 
   left_join(country_code, by = c("country"= "id"))
