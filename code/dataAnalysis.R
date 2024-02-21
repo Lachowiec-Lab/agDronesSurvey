@@ -8,9 +8,9 @@ library(patchwork)
 library(tidyverse)
 
 ### Read in survey data
-prelim <- read.csv("Results_Ag_Drones_2021_Survey.csv")
+prelim <- read.csv("data/Results_Ag_Drones_2021_Survey.csv")
 head(prelim)
-country_code <- read.csv("countries.csv")
+country_code <- read.csv("data/countries_code.csv")
 
 ###Section 1####
 ####Survey respondents’ demographics and perceived value of UAS in agricultural research#####
@@ -20,7 +20,7 @@ sum(country_data$Freq) #135 respondents for this question
 names(country_data) <- c("id", "Frequency")
 outs <- merge(country_data, country_code, by = "id")
 
-outs %>%
+outs |>
   ggplot(aes(x = Country, y = Frequency)) +
   geom_bar(stat = "identity", fill = "seagreen") +
   theme_classic() +
@@ -41,7 +41,7 @@ names(gender_data) <- c("Gender", "Frequency")
 gender_data
 sum(gender_data$Freq) #137 respondents for this question, one option
 
-gender_data %>%
+gender_data |>
   ggplot(aes(x = reorder(Gender, Frequency), y = Frequency)) +
   geom_bar(stat = "identity", fill = "seagreen") +
   theme_classic() +
@@ -63,7 +63,7 @@ race_totals
 race_names <- c("Asian or Pacific Islander", "Black African or African American", "Hispanic or Latino", "Native American or Alaska Native", "White or Caucasian", "Prefer not to say", "A race or ethnicity not listed here")
 race <-data.frame(Race = race_names, Frequency = race_totals)
 head(race_data)
-race %>%
+race |>
   ggplot(aes(x = reorder(Race, Frequency), y = Frequency)) +
   geom_bar(stat = "identity", fill = "seagreen") +
   theme_classic() +
@@ -84,7 +84,7 @@ names(age_data) <- c("Age", "Frequency")
 age_data
 sum(age_data$Frequency) #135 completed this question
 
-age_data %>%
+age_data |>
   ggplot(aes(x = Age, y = Frequency)) +
   geom_bar(stat = "identity", fill = "seagreen") +
   theme_classic() +
@@ -152,7 +152,7 @@ system_names <- c("Aquatic plants",
                    "Not applicable")
 systems <-data.frame(System = system_names, Frequency = system_totals)
 
-systems %>%
+systems |>
   ggplot(aes(x = reorder(System, -Frequency), y = Frequency)) +
   geom_bar(stat = "identity", fill = "steelblue") +
   theme_classic() +
@@ -185,7 +185,7 @@ system_names <- c("Arthropods",
                   "Not applicable")
 systems <-data.frame(System = system_names, Frequency = system_totals)
 
-systems %>%
+systems |>
   ggplot(aes(x = reorder(System, -Frequency), y = Frequency)) +
   geom_bar(stat = "identity", fill = "steelblue") +
   theme_classic() +
@@ -206,7 +206,7 @@ summary(path_data)
 path <- data.frame(table(path_data))
 names(path) <- c("Choice", "Frequency")
 path$Choice <- c("No", "Yes")
-path %>%
+path |>
   ggplot(aes(x = reorder(Choice, -Frequency), y = Frequency)) +
   geom_bar(stat = "identity", fill = "steelblue") +
   theme_classic() +
@@ -252,7 +252,7 @@ topic_names <- c("Agronomy",
                   "Other")
 topics <-data.frame(Topic = topic_names, Frequency = topic_totals)
 
-topics %>%
+topics |>
   ggplot(aes(x = reorder(Topic, -Frequency), y = Frequency)) +
   geom_bar(stat = "identity", fill = "steelblue") +
   theme_classic() +
@@ -275,7 +275,7 @@ value_names <- c("Very valuable", "Valuable", "Can be valuable", "Minimally valu
 values <-data.frame(Value = value_names, Frequency = value_data$Freq)
 sum(values$Frequency) #145 responses
 
-values %>%
+values |>
   ggplot(aes(x = reorder(Value, -Frequency), y = Frequency)) +
   geom_bar(stat = "identity", fill = "steelblue") +
   theme_classic() +
@@ -318,7 +318,7 @@ value_names <- c("Very valuable", "Valuable", "Can be valuable", "Minimally valu
 valuesF <-data.frame(Value = value_names, Frequency = value_data$Freq)
 sum(valuesF$Frequency) #71 responses
 
-valuesF %>%
+valuesF |>
   ggplot(aes(x = reorder(Value, -Frequency), y = Frequency)) +
   geom_bar(stat = "identity", fill = "steelblue") +
   theme_classic() +
@@ -343,7 +343,7 @@ value_names <- c("Very valuable", "Valuable", "Can be valuable", "Minimally valu
 valuesC <-data.frame(Value = value_names, Frequency = value_data$Freq)
 sum(valuesC$Frequency) #61 responses
 
-valuesC %>%
+valuesC |>
   ggplot(aes(x = reorder(Value, -Frequency), y = Frequency)) +
   geom_bar(stat = "identity", fill = "steelblue") +
   theme_classic() +
@@ -405,7 +405,7 @@ barrier_names <- c("Satisfaction with\n current approaches",
                    "No barriers")
 barriers <-data.frame(Barrier = barrier_names, Frequency = barrier_totals)
 
-barriers %>%
+barriers |>
   ggplot(aes(x = reorder(Barrier, -Frequency), y = Frequency)) +
   geom_bar(stat = "identity", fill = "steelblue") +
   theme_classic() +
@@ -422,11 +422,11 @@ barriers[barriers$Barrier == "Lack of knowledge or trained \npersonnel to analyz
 
 #####Barriers non-US#####
 barrier_data <- subset(prelim, select=c(country,bsatisf:bnobar))
-barrier_dataNoUS <- barrier_data %>%
+barrier_dataNoUS <- barrier_data |>
   filter(country != 187) ##US country code is 187
 barrier_totals <- colSums(barrier_dataNoUS[,-1], na.rm = T)
 barriers <-data.frame(Barrier = barrier_names, Frequency = barrier_totals)
-barriers %>%
+barriers |>
   ggplot(aes(x = reorder(Barrier, -Frequency), y = Frequency)) +
   geom_bar(stat = "identity", fill = "steelblue") +
   theme_classic() +
@@ -446,7 +446,7 @@ nrow(barrier_data[complete.cases(barrier_data), ]) # we have 57 responses,
 barrier_totals <- colSums(barrier_data, na.rm = T)
 barriersC <-data.frame(Barrier = barrier_names, Frequency = barrier_totals)
 
-barriersCplot <- barriersC %>%
+barriersCplot <- barriersC |>
   ggplot(aes(x = reorder(Barrier, -Frequency), y = Frequency)) +
   geom_bar(stat = "identity", fill = "steelblue") +
   theme_classic() +
@@ -464,7 +464,7 @@ nrow(barrier_data[complete.cases(barrier_data), ]) # we have 68 responses,
 barrier_totals <- colSums(barrier_data, na.rm = T)
 barriersF <-data.frame(Barrier = barrier_names, Frequency = barrier_totals)
 
-barriersFplot <- barriersF %>%
+barriersFplot <- barriersF |>
   ggplot(aes(x = reorder(Barrier, -Frequency), y = Frequency)) +
   geom_bar(stat = "identity", fill = "steelblue") +
   theme_classic() +
@@ -549,7 +549,7 @@ resource_data$Var1 <- c("In-person training for personnel",
 names(resource_data) <- c("Resource", "Frequency")
 resource_data
 
-resource_data %>%
+resource_data |>
   ggplot(aes(x = reorder(Resource, -Frequency), y = Frequency)) +
   geom_bar(stat = "identity", fill = "steelblue") +
   theme_classic() +
@@ -577,7 +577,7 @@ resource_data$Var1 <- c("In-person training for personnel",
 names(resource_data) <- c("Resource", "Frequency")
 resource_data
 
-resource_data %>%
+resource_data |>
   ggplot(aes(x = reorder(Resource, -Frequency), y = Frequency)) +
   geom_bar(stat = "identity", fill = "seagreen") +
   theme_classic() +
@@ -603,7 +603,7 @@ mode_data$Var1 <- c("Colleague(s)",
 names(mode_data) <- c("Mode", "Frequency")
 mode_data
 
-mode_data %>%
+mode_data |>
   ggplot(aes(x = reorder(Mode, -Frequency), y = Frequency)) +
   geom_bar(stat = "identity", fill = "seagreen") +
   theme_classic() +
@@ -629,7 +629,7 @@ mode_data$Var1 <- c("Colleague(s)",
 names(mode_data) <- c("Resource", "Frequency")
 names(mode_data) <- c("Mode", "Frequency")
 mode_data
-mode_data %>%
+mode_data |>
   ggplot(aes(x = reorder(Mode, -Frequency), y = Frequency)) +
   geom_bar(stat = "identity", fill = "seagreen") +
   theme_classic() +
@@ -652,7 +652,7 @@ plan_names <- c("km", "hectare", "m", "cm", "mm")
 plan <-data.frame(Distance = plan_names, Frequency = plan_totals)
 plan$Distance <- factor(plan$Distance, levels = c("mm", "cm", "m", "hectare", "km"))
 
-plan %>%
+plan |>
   ggplot(aes(x = Distance, y = Frequency)) +
   geom_bar(stat = "identity", fill = "steelblue") +
   theme_classic() +
@@ -675,7 +675,7 @@ plan_names <- c("single image", "1x/year", "2-6x/year", "weekly", ">1/week", "da
 plan <-data.frame(Timing = plan_names, Frequency = plan_totals)
 plan$Timing <- factor(plan$Timing, levels = c("single image", "1x/year", "2-6x/year", "weekly", ">1/week", "daily", ">1/day"))
 
-plan %>%
+plan |>
   ggplot(aes(x = Timing, y = Frequency)) +
   geom_bar(stat = "identity", fill = "steelblue") +
   theme_classic() +
@@ -696,7 +696,7 @@ uav_totals
 uav_names <- c("fixed wing", "multirotor", "single rotor", "vertical TOL", "other")
 uavs <-data.frame(UAV = uav_names, Frequency = uav_totals)
 
-uavs %>%
+uavs |>
   ggplot(aes(x = reorder(UAV, -Frequency), y = Frequency)) +
   geom_bar(stat = "identity", fill = "steelblue") +
   theme_classic() +
@@ -717,7 +717,7 @@ sensor_totals
 sensor_names <- c("RGB", "thermal", "multispectral", "hyperspectral", "LIDAR", "developing own", "other")
 sensors <-data.frame(Sensors = sensor_names, Frequency = sensor_totals)
 
-sensors %>%
+sensors |>
   ggplot(aes(x = reorder(Sensors, -Frequency), y = Frequency)) +
   geom_bar(stat = "identity", fill = "steelblue") +
   theme_classic() +
@@ -741,7 +741,7 @@ georef_totals
 georef_names <- c("GCP", "RTK", "PPK", "GPS-equipped planter", "none", "other")
 georef <-data.frame(Georeferencing = georef_names, Frequency = georef_totals)
 
-georef %>%
+georef |>
   ggplot(aes(x = reorder(Georeferencing, -Frequency), y = Frequency)) +
   geom_bar(stat = "identity", fill = "steelblue") +
   theme_classic() +
@@ -764,7 +764,7 @@ datacol_names <- c("Gimbals for sensor(s)",
 datacol_totals <- c(35,1,25,38,15)
 datacol <-data.frame(DataCollection = datacol_names, Frequency = datacol_totals)
 
-datacol %>%
+datacol |>
   ggplot(aes(x = reorder(DataCollection, -Frequency), y = Frequency)) +
   geom_bar(stat = "identity", fill = "steelblue") +
   theme_classic() +
@@ -786,7 +786,7 @@ plan_totals
 plan_names <- c("DJI Flight Planner", "DroneDeploy", "DroneLink", "FieldAgent", "Micasense Atlas", "Pix4D", "Wingtra", "Not sure", "Other")
 plan <-data.frame(FlightPlanning = plan_names, Frequency = plan_totals)
 
-plan %>%
+plan |>
   ggplot(aes(x = reorder(FlightPlanning, -Frequency), y = Frequency)) +
   geom_bar(stat = "identity", fill = "steelblue") +
   theme_classic() +
@@ -820,7 +820,7 @@ plan_names <- c("Agisoft Metashape 3D",
 )
 plan <-data.frame(FlightAnalysis = plan_names, Frequency = plan_totals)
 
-plan %>%
+plan |>
   ggplot(aes(x = reorder(FlightAnalysis, -Frequency), y = Frequency)) +
   geom_bar(stat = "identity", fill = "steelblue") +
   theme_classic() +
@@ -855,8 +855,13 @@ plan_names <- c("Public cloud",
 plan <-data.frame(Storage = plan_names, Frequency = plan_totals)
 table(plan$Frequency)
 
+<<<<<<< HEAD:code/dataAnalysis.R
+plan |>
+  ggplot(aes(x = reorder(FlightPlanning, -Frequency), y = Frequency)) +
+=======
 plan %>%
   ggplot(aes(x = reorder(Storage, -Frequency), y = Frequency)) +
+>>>>>>> main:dataAnalysis.R
   geom_bar(stat = "identity", fill = "steelblue") +
   theme_classic() +
   theme(axis.text.x = element_text(angle = 45, vjust = 1, hjust=1),
@@ -876,7 +881,7 @@ summary(plan_data)
 proto <- data.frame(table(plan_data))
 names(proto) <- c("Choice", "Frequency")
 proto$Choice <- c("No", "Yes")
-proto %>%
+proto |>
   ggplot(aes(x = reorder(Choice, -Frequency), y = Frequency)) +
   geom_bar(stat = "identity", fill = "steelblue") +
   theme_classic() +
@@ -895,7 +900,7 @@ summary(plan_data)
 public <- data.frame(table(plan_data))
 names(public) <- c("Choice", "Frequency")
 public$Choice <- c("No", "Yes")
-public %>%
+public |>
   ggplot(aes(x = reorder(Choice, -Frequency), y = Frequency)) +
   geom_bar(stat = "identity", fill = "steelblue") +
   theme_classic() +
