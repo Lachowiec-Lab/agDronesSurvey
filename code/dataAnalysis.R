@@ -524,7 +524,7 @@ chisq.test(as.table(mat))
 
 ##Team size
 table(futureuse$ftime)
-table(users$ftime) #missing some categories, so added manually
+table(futureuse$ftime) #missing some categories, so added manually
 mat <-  matrix(c(as.integer(table(futureuse$ftime)), 0, 4, 2, 12), ncol = 4, nrow = 2, byrow = T)
 colnames(mat) <- c("1", "2-3", "4-6", "7+")
 rownames(mat) <- c("future users", "current users")
