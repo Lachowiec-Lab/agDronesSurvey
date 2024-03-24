@@ -31,11 +31,11 @@ Code used to process data and generate the manuscript's analysis and figures.
 
 This repository contains data and code to support the manuscript:
 
-> Lachowiec, J., Feldman, M.J., Matias, F.I., LeBauer, D., Gregory, A. (2024). Unoccupied aerial systems adoption in agricultural research. Zenodo. The Plant Phenome Journal Volume(Issue), pages 00. doi:DOI
+> Lachowiec, J., Feldman, M.J., Matias, F.I., LeBauer, D., Gregory, A. (2024). Unoccupied aerial systems adoption in agricultural research. Zenodo. The Plant Phenome Journal Volumume 7 issue 1. e20098 doi:[10.1002/ppj2.20098](https://doi.org/10.1002/ppj2.20098)
 
 If you use the data or code from this repository, please also cite:
 
-> Lachowiec, J., Feldman, M.J., Matias, F.I., LeBauer, D., Gregory, A. (2024). Data and code from: Unoccupied aerial systems adoption in agricultural research. Zenodo. doi:10.5281/zenodo.10573428
+> Lachowiec, J., Feldman, M.J., Matias, F.I., LeBauer, D., Gregory, A. (2024). Data and code from: Unoccupied aerial systems adoption in agricultural research. Zenodo. doi:[10.5281/zenodo.10573428](https://doi.org10.5281/zenodo.10573428)
 
 And consider contributing cleaned data and code to this repository.
 
